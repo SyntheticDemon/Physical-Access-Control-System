@@ -13,7 +13,7 @@ HistoryWindow::HistoryWindow(QWidget *parent)
     this->setWindowIcon(QIcon("Ut.ico"));
     this->setWindowFlag(Qt::CustomizeWindowHint);
     this->setWindowTitle("IoT Monitoring System - History");
-    this->setPalette(QPalette(QColor::fromString("#E0E0E0"), QColor::fromString("#121212")));
+    this->setPalette(QPalette(QColor("#E0E0E0"), QColor("#121212")));
 
     int x = 20, y = 20;
     int width = this->width() - 40;
@@ -32,7 +32,7 @@ void HistoryWindow::show(const QJsonArray &array)
     uint index = 0;
     _list->addItem("index\tusername\t|\tdate\t|\ttime");
 
-    for (auto& item : array){
+    for (const auto& item : array){
         index++;
 
         auto object       = item.toObject();

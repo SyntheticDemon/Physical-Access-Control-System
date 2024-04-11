@@ -1,11 +1,11 @@
-#include "cpsapplication.h"
+#include "mainwindow.h"
+
+#include <QApplication>
 
 int main(int argc, char *argv[])
 {
-    QApplication qApplication(argc, argv);
-
-    CPS::Application application;
-    application.show();
-
-    return qApplication.exec();
+    QApplication a(argc, argv);
+    MainWindow w;
+    w.show();
+    return a.exec();
 }
