@@ -3,7 +3,6 @@
 #include <qfile.h>
 #define SCHEME "http"
 #define HOST "127.0.0.1"
-#define PORT 49425
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonArray>
@@ -47,12 +46,13 @@ QStringList loadRFIDsFromJson(const QString &filePath) {
 }
 
 void setupHTTPServer(QStringList rfids){
-    QHttpServer httpServer;
+    static QHttpServer httpServer;
     httpServer.route("/checkRFID", QHttpServerRequest::Method::Post, [&rfids](const QHttpServerRequest &request) {
         QJsonDocument doc = QJsonDocument::fromJson(request.body());
         QJsonObject obj = doc.object();
         QString rfid = obj["rfid"].toString();
-
+        qCritical() <<"Received RFID" << rfid;
+        qCritical() <<"RFIDS :  rfids" << rfids;
         QJsonObject response;
         response["exists"] = rfids.contains(rfid);
         response["message"] = rfids.contains(rfid) ? "RFID found." : "RFID not found.";
@@ -61,20 +61,18 @@ void setupHTTPServer(QStringList rfids){
         return QHttpServerResponse("application/json", respDoc.toJson());
     });
 
-    // Listen on port 8080
-    if (!httpServer.listen(QHostAddress::Any, 8085)) {
-        qCritical() << "Failed to open HTTP server on port 8080";
+    if (!httpServer.listen(QHostAddress::Any, 8088)) {
+        qCritical() << "Failed to open HTTP server on port 8088";
     }
+    qInfo() << "Started HTTP server on port 8088" ;
 
 }
-
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     QStringList rfids =loadRFIDsFromJson("rfids.json");
     setupHTTPServer(rfids);
-    qDebug()<< "First RFID : for Test : Purposes" << rfids[0];
 
     return a.exec();
 }
