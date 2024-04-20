@@ -108,7 +108,7 @@ void MainWindow::setupGlobalStyle()
     this->setWindowIcon(QIcon("Ut.ico"));
     this->setWindowFlag(Qt::CustomizeWindowHint);
     this->setWindowTitle("IoT Monitoring System");
-    this->setPalette(QPalette(QColor("#E0E0E0"), QColor("#121212")));
+    this->setPalette(QPalette(QColor::fromString("#E0E0E0"), QColor::fromString("#121212")));
 }
 
 void MainWindow::setupWindowLayout()
