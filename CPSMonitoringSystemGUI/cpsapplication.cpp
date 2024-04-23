@@ -1,5 +1,6 @@
 #include "cpsapplication.h"
-
+#include "BidirectionalConnection.h"
+#include <qurl.h>
 namespace CPS {
 
 Application::Application(QObject *parent)
@@ -8,11 +9,11 @@ Application::Application(QObject *parent)
     _history(new HistoryWindow)
 {
     setWindowsThemeToDark<MainWindow>(*_window);
-
+    QObject::connect(_window, &MainWindow::connectBtnClicked, this, &Application::setupWebSocket);
     QObject::connect(_window, &MainWindow::historyuBtnClicked, this, &Application::showHistoryWindow);
 
     // TODO:
-    // QObject::connect(&YourSocketClassInstance, &YourSocketClass::newUser, &window, &MainWindow::showUserDetails);
+    // QObject::connect(this->_connection, &BidirectionalConnection::connected, _window, &MainWindow::showUserDetails);
     // QObject::connect(&window, &MainWindow::connectBtnClicked, &YourSocketClassInstance, &YourSocketClass::connectToServer);
     // QObject::connect(&YourSocketClassInstance, &YourSocketClass::connectionChanged, &window, &MainWindow::changeRightPanelEnabled);
 
@@ -22,9 +23,19 @@ Application::~Application()
 {
     delete this->_window;
     delete this->_history;
+    delete this->_connection;
+}
 
-    //TODO:
-    //delete this->_YourSocketClassInstance;
+void Application::setupWebSocket(const QString &url, const QString &username, const QString &password)
+{
+    qDebug() << "Starting The Application Web Socket" << url << username << password << Qt::endl;
+    QUrl websocketUrl(url);
+    _connection = new BidirectionalConnection(websocketUrl);
+    _connection->startConnection();
+    qDebug() << "WebSocket connection  Succesfully started";
+    qDebug() << "Logging in";
+    _connection->login(username,password);
+
 }
 
 void Application::show()
@@ -35,7 +46,6 @@ void Application::show()
 void Application::showHistoryWindow()
 {
     setWindowsThemeToDark<HistoryWindow>(*_history);
-
     // TODO:
     /*
          * fetch data from server and show it in history window.

@@ -1,27 +1,27 @@
 #include "BidirectionalConnection.h"
 #include <QJsonDocument>
 #include <QJsonObject>
-
-#include "BidirectionalConnection.h"
-#include "HttpRequest.h"
-#include <QJsonDocument>
-#include <QJsonObject>
-
-BidirectionalConnection::BidirectionalConnection(QObject *parent) : QObject(parent)
+#include "httprequest.h"
+BidirectionalConnection::BidirectionalConnection(const QUrl& url, QObject *parent)
+    : QObject(parent), m_url(url) // Initialize m_url with the provided URL
 {
     QObject::connect(&webSocket, &QWebSocket::connected, this, &BidirectionalConnection::onConnected);
+    // QObject::connect(&webSocket, &QWebSocket::error, this, &BidirectionalConnection::onError);
     QObject::connect(&webSocket, &QWebSocket::textMessageReceived, this, &BidirectionalConnection::onTextMessageReceived);
 }
 
-void BidirectionalConnection::connect(const QUrl &url)
+void BidirectionalConnection::startConnection()
 {
-    webSocket.open(url);
+    qDebug() <<"Opening Connection to Server socket" << this->m_url;
+    webSocket.open(this->m_url);
+
 }
+
 
 void BidirectionalConnection::login(const QString &username, const QString &password)
 {
     HttpRequest request;
-    request.setUrl("/login");  // Assuming URL is passed here if needed, though typically not used in WebSocket
+    request.setUrl("/login");
     request.setMethod("POST");
 
     QJsonObject jsonBody;
@@ -30,7 +30,20 @@ void BidirectionalConnection::login(const QString &username, const QString &pass
     request.setBody(jsonBody);
 
     webSocket.sendTextMessage(request.toJsonString());
+    qDebug() << "Sent Login Request";
 }
+
+void BidirectionalConnection::sendMessage(const QString &message)
+{
+    webSocket.sendTextMessage(message);
+}
+
+
+void BidirectionalConnection::onError()
+{
+    qDebug() << "WebSocket Error!";
+}
+
 
 void BidirectionalConnection::onConnected()
 {
@@ -43,4 +56,3 @@ void BidirectionalConnection::onTextMessageReceived(const QString &message)
     qDebug() << "Message received:" << message;
     // Process incoming messages as needed
 }
-

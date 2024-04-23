@@ -7,7 +7,7 @@
 #include "cpsmainwindow.h"
 #include "cpshistorywindow.h"
 #include "cpswindowsapitools.h"
-
+#include "BidirectionalConnection.h"
 namespace CPS {
 
 class Application : public QObject
@@ -24,6 +24,7 @@ public:
 Q_SIGNALS:
 
 private Q_SLOTS:
+    void setupWebSocket(const QString &url, const QString &username, const QString &password);
     void showHistoryWindow();
 
 private: // methods
@@ -31,9 +32,7 @@ private: // methods
 private: // members
     MainWindow    *_window;
     HistoryWindow *_history;
-
-    //TODO:
-    //YourSocketClass *_YourSocketClassInstance;
+    BidirectionalConnection* _connection; // Make BidirectionalConnection a member variable
 };
 
 } // end of CPS
