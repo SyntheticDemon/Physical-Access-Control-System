@@ -18,9 +18,7 @@
 #include <QJsonObject>
 
 void Server::setupHTTPServer(){
-    QHttpServer httpServer;
-
-    httpServer.route("/checkRFID", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) -> QHttpServerResponse {
+    _m_httpServer.route("/checkRFID", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) -> QHttpServerResponse {
         if (request.url().path() == "/checkRFID") {
             QJsonDocument doc = QJsonDocument::fromJson(request.body());
             QJsonObject obj = doc.object();
@@ -32,33 +30,24 @@ void Server::setupHTTPServer(){
 
             QJsonDocument respDoc(jsonResponse);
             return QHttpServerResponse("application/json", respDoc.toJson());
-        }
-        else{
+        } else {
             return QHttpServerResponse("application/text", "Not Found");
         }
     });
 
-    if (!httpServer.listen(QHostAddress::Any, 8088)) {
-        qCritical() << "Failed to open HTTP server on port 8088";
+    if (!_m_httpServer.listen(QHostAddress::Any, HTTP_SERVER_PORT)) {
+        qCritical() << "Failed to open HTTP server on port" << HTTP_SERVER_PORT;
     } else {
-        qInfo() << "Started HTTP server on port 8088";
+        qInfo() << "Started HTTP server on port" << HTTP_SERVER_PORT;
     }
-    this->_m_httpServer=&httpServer;
 }
 
-
-Server::Server(QObject *parent) : QObject(parent)
+Server::Server(QObject *parent)
+    : QObject(parent), _m_socketServer(SOCKET_SERVER_PORT, this)
 {
     loadRFIDsFromJson("rfids.json");
     loadUsersFromJson("users.json");
-    Server::setupSocketServer();
     Server::setupHTTPServer();
-}
-
-void Server::setupSocketServer()
-{
-    SocketServer ss= SocketServer(SOCKET_SERVER_PORT);
-    this->_m_socketServer=&ss;
 }
 
 QJsonObject Server::loadJsonFromFile(const QString &fileName)
@@ -92,7 +81,7 @@ void Server::loadRFIDsFromJson(const QString &filePath)
             rfids.append(value.toString());
         }
     } else {
-        qDebug() << "Failed to load or parse JSON.";
+        qDebug() << "Failed to load or parse RFID JSON.";
     }
     this->m_rfids = rfids;
 }
@@ -104,6 +93,6 @@ void Server::loadUsersFromJson(const QString &filePath)
         qDebug() << "JSON loaded successfully!";
         this->m_users = json;
     } else {
-        qDebug() << "Failed to load or parse JSON.";
+        qDebug() << "Failed to load or parse USER JSON.";
     }
 }

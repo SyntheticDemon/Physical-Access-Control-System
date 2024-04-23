@@ -20,8 +20,8 @@ public:
     explicit Server(QObject *parent = nullptr);
 
 private:
-    QHttpServer* _m_httpServer;
-    SocketServer* _m_socketServer;
+    QHttpServer _m_httpServer;
+    SocketServer _m_socketServer;
     QStringList m_rfids;
     QJsonObject  m_users;
     void        setupHTTPServer();
