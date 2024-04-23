@@ -20,17 +20,21 @@ void BidirectionalConnection::startConnection()
 
 void BidirectionalConnection::login(const QString &username, const QString &password)
 {
-    HttpRequest request;
-    request.setUrl("/login");
-    request.setMethod("POST");
+    if (webSocket.state() == QAbstractSocket::ConnectedState) {
+        HttpRequest request;
+        request.setUrl("/login");
+        request.setMethod("POST");
 
-    QJsonObject jsonBody;
-    jsonBody["username"] = username;
-    jsonBody["password"] = password;
-    request.setBody(jsonBody);
+        QJsonObject jsonBody;
+        jsonBody["username"] = username;
+        jsonBody["password"] = password;
+        request.setBody(jsonBody);
 
-    webSocket.sendTextMessage(request.toJsonString());
-    qDebug() << "Sent Login Request";
+        webSocket.sendTextMessage(request.toJsonString());
+        qDebug() << "Sent Login Request";
+    } else {
+        qDebug() << "WebSocket is not connected, cannot send login request.";
+    }
 }
 
 void BidirectionalConnection::sendMessage(const QString &message)
@@ -48,7 +52,8 @@ void BidirectionalConnection::onError()
 void BidirectionalConnection::onConnected()
 {
     qDebug() << "WebSocket connected!";
-    // Optionally emit signal
+    emit connected();
+
 }
 
 void BidirectionalConnection::onTextMessageReceived(const QString &message)

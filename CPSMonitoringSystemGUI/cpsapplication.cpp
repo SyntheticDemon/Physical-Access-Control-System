@@ -28,13 +28,14 @@ Application::~Application()
 
 void Application::setupWebSocket(const QString &url, const QString &username, const QString &password)
 {
-    qDebug() << "Starting The Application Web Socket" << url << username << password << Qt::endl;
+    qDebug() << "Setting up WebSocket" << url;
     QUrl websocketUrl(url);
-    _connection = new BidirectionalConnection(websocketUrl);
+    _connection = new BidirectionalConnection(websocketUrl, this);
+    connect(_connection, &BidirectionalConnection::connected, this, [this, username, password]() {
+        _connection->login(username, password);
+    });
+
     _connection->startConnection();
-    qDebug() << "WebSocket connection  Succesfully started";
-    qDebug() << "Logging in";
-    _connection->login(username,password);
 
 }
 

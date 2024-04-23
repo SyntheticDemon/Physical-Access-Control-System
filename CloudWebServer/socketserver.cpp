@@ -15,6 +15,7 @@ SocketServer::SocketServer(quint16 port, QObject *parent)
 void SocketServer::handleNewConnection()
 {
     QWebSocket *clientSocket = nextPendingConnection();
+    qDebug() << "Received new connection" ;
     if (clientSocket) {
         connect(clientSocket, &QWebSocket::textMessageReceived, this, &SocketServer::onTextMessageReceived);
         connect(clientSocket, &QWebSocket::disconnected, clientSocket, &QWebSocket::deleteLater);
@@ -26,5 +27,6 @@ void SocketServer::onTextMessageReceived(const QString &message)
     QWebSocket *socket = qobject_cast<QWebSocket *>(sender());
     if (socket) {
         qDebug() << "Message received from" << socket->peerAddress().toString() << ":" << socket->peerPort() << "-" << message;
+        socket->sendTextMessage("Hello There Cunt");
     }
 }
