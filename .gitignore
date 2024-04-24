@@ -1,2 +1,6 @@
-/build/*
+CA1/build/*
 .json
+
+CA1/Proteus/*
+!CA1/Proteus/CA1.pdsprj
+!CA1/Proteus/sketch_apr23a
