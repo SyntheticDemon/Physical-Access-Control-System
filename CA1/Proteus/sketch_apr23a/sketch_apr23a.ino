@@ -1,10 +1,22 @@
+#include <EtherCard.h>
+
 #define RED_DIODE_PORT 13
 #define GREEN_DIODE_PORT 12
-#define MOTOR_PORT1 7
-#define MOTOR_PORT2 6
+#define MOTOR_PORT1 11
+#define MOTOR_PORT2 10
 
 String TRUE_RFID = "1111";
 String receivedRFID;
+
+// Static IP configuration
+static byte myip[] = { 169, 254, 238, 216 }; // Arduino's static IP address
+static byte gwip[] = { 169, 254, 12, 63 }; // Gateway IP address
+
+// MAC address of the Arduino
+static byte mymac[] = { 0x74, 0x69, 0x69, 0x2D, 0x30, 0x31 };
+
+// Ethernet buffer size
+byte Ethernet::buffer[700];
 
 void setup() {
   // put your setup code here, to run once:
@@ -17,6 +29,12 @@ void setup() {
 
   // Setting up a serial communication to communicate with a virtual terminal
   Serial.begin(9600);
+
+  // Begin Ethernet communication with buffer size and MAC address
+  ether.begin(sizeof Ethernet::buffer, mymac, SS);
+
+  // Configure static IP and gateway IP
+  ether.staticSetup(myip, gwip);
 }
 
 void loop() {
@@ -30,6 +48,14 @@ void loop() {
 
     // ***********
     // TODO: THE connection to the sever should be handled here:
+    Serial.println("Waiting for the Server to respond...");
+    while(true){
+      // Handle incoming Ethernet packets and get the position of the data
+      word pos = ether.packetLoop(ether.packetReceive());
+      if(pos)
+        break;
+    }
+    
 
     // ************
 
@@ -67,5 +93,4 @@ void loop() {
     // Clear the String object for the next read
     receivedRFID = "";
   }
-
 }
