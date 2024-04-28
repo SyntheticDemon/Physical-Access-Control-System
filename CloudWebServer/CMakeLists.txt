@@ -8,10 +8,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Find only necessary Qt packages
 find_package(Qt6 REQUIRED COMPONENTS Core Network HttpServer WebSockets)
 
-# Define your executable and related files
 add_executable(RFIDServerr
     main.cpp
     socketserver.cpp
@@ -20,7 +18,6 @@ add_executable(RFIDServerr
     server.h
 )
 
-# Link against the Qt modules you found above
 target_link_libraries(RFIDServerr
     Qt6::Core
     Qt6::Network

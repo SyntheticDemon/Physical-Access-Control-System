@@ -18,12 +18,13 @@ public:
 
     explicit Application(QObject *parent = nullptr);
     ~Application();
-
+    QJsonArray _historyArray;
     void show();
 
 Q_SIGNALS:
 
 private Q_SLOTS:
+    void receiveHistory(const QJsonObject &history);
     void setupWebSocket(const QString &url, const QString &username, const QString &password);
     void showHistoryWindow();
 
@@ -32,7 +33,7 @@ private: // methods
 private: // members
     MainWindow    *_window;
     HistoryWindow *_history;
-    BidirectionalConnection* _connection; // Make BidirectionalConnection a member variable
+    BidirectionalConnection* _connection;
 };
 
 } // end of CPS

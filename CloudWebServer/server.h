@@ -19,7 +19,11 @@ class Server : public QObject
 public:
     explicit Server(QObject *parent = nullptr);
 
+private slots:
+     QString authenticateUser(const QJsonObject &request);
+
 private:
+    QString formHistory(QJsonObject& qJO);
     QHttpServer _m_httpServer;
     SocketServer _m_socketServer;
     QStringList m_rfids;
@@ -27,10 +31,9 @@ private:
     void        setupHTTPServer();
     void        setupSocketServer();
     QJsonObject loadJsonFromFile(const QString &fileName);
-    void        loadRFIDsFromJson(const QString &filePath);
-    void        loadUsersFromJson(const QString &filePath);
-
-signals:
+    QMap<QString, QString> m_userRFIDs;
+    QMap<QString, QString> m_userPasswords;
+    void loadDataFromJson(const QString &filePath);
 
 };
 

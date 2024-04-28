@@ -7,6 +7,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonArray>
+#include <QObject>
 #include <QJsonValue>
 #define SCHEME "http"
 #define HOST "127.0.0.1"
@@ -16,19 +17,32 @@
 #include <QtHttpServer/QHttpServerResponse>
 #include <QJsonDocument>
 #include <QJsonObject>
-
+QString findUsernameByRFID(const QMap<QString, QString>& map, const QString& rfid) {
+    for (auto it = map.begin(); it != map.end(); ++it) {
+        if (it.value() == rfid) {
+            return it.key();
+        }
+    }
+    return QString();
+}
 void Server::setupHTTPServer(){
     _m_httpServer.route("/checkRFID", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) -> QHttpServerResponse {
         if (request.url().path() == "/checkRFID") {
             QJsonDocument doc = QJsonDocument::fromJson(request.body());
             QJsonObject obj = doc.object();
             QString rfid = obj["rfid"].toString();
-
             QJsonObject jsonResponse;
-            jsonResponse["exists"] = m_rfids.contains(rfid);
-            jsonResponse["message"] = m_rfids.contains(rfid) ? "RFID found." : "RFID not found.";
-
+            QDateTime now = QDateTime::currentDateTime();
+                jsonResponse["exists"] = m_userRFIDs.values().contains(rfid);
+                jsonResponse["message"] = m_userRFIDs.values().contains(rfid) ? "RFID found." : "RFID not found.";
+            jsonResponse["date"] = now.date().toString(Qt::ISODate);
+            jsonResponse["time"] = now.time().toString(Qt::ISODate);
+            jsonResponse["username"] = findUsernameByRFID(m_userRFIDs,rfid);
             QJsonDocument respDoc(jsonResponse);
+            jsonResponse["type"] = "history";
+            QString historyLog(this->formHistory(jsonResponse));
+            qDebug() << "Emitting History Log" << historyLog ;
+            this->_m_socketServer.sendMessageToClient(historyLog);
             return QHttpServerResponse("application/json", respDoc.toJson());
         } else {
             return QHttpServerResponse("application/text", "Not Found");
@@ -45,8 +59,8 @@ void Server::setupHTTPServer(){
 Server::Server(QObject *parent)
     : QObject(parent), _m_socketServer(SOCKET_SERVER_PORT, this)
 {
-    loadRFIDsFromJson("rfids.json");
-    loadUsersFromJson("users.json");
+    loadDataFromJson("users.json");
+    connect(&_m_socketServer, &SocketServer::sendAuthSignal, this, &Server::authenticateUser);
     Server::setupHTTPServer();
 }
 
@@ -55,7 +69,7 @@ QJsonObject Server::loadJsonFromFile(const QString &fileName)
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly)) {
         qWarning() << "Couldn't open the file.";
-        return {};  // Return an empty JSON object if the file doesn't open
+        return {};
     }
 
     QByteArray fileData = file.readAll();
@@ -70,29 +84,51 @@ QJsonObject Server::loadJsonFromFile(const QString &fileName)
     return doc.object();
 }
 
-void Server::loadRFIDsFromJson(const QString &filePath)
+void Server::loadDataFromJson(const QString &filePath)
 {
-    QStringList rfids;
+
     QJsonObject json = loadJsonFromFile(filePath);
-    if (!json.isEmpty()) {
-        qDebug() << "JSON loaded successfully!";
-        QJsonArray rfidArray = json.value("rfids").toArray();
-        for (const QJsonValue &value : rfidArray) {
-            rfids.append(value.toString());
-        }
-    } else {
-        qDebug() << "Failed to load or parse RFID JSON.";
+    QJsonArray usersArray = json["users"].toArray();
+    for (const QJsonValue &userValue : usersArray) {
+        QJsonObject userObj = userValue.toObject();
+        QString username = userObj["username"].toString();
+        QString rfid = userObj["rfid"].toString();
+        QString password = userObj["password"].toString();
+        m_userRFIDs[username] = rfid;
+        m_userPasswords[username]=password;
     }
-    this->m_rfids = rfids;
 }
 
-void Server::loadUsersFromJson(const QString &filePath)
-{
-    QJsonObject json = loadJsonFromFile(filePath);
-    if (!json.isEmpty()) {
-        qDebug() << "JSON loaded successfully!";
-        this->m_users = json;
+QString Server::authenticateUser(const QJsonObject &request) {
+    qDebug() << "Authenticating User with request" << request;
+    QString username = request["body"].toObject()["username"].toString();
+    QString password = request["body"].toObject()["password"].toString();
+    QJsonObject responseObj;
+
+    if (m_userPasswords.contains(username) && m_userPasswords[username] == password) {
+        QString rfid = m_userRFIDs[username];
+        QDateTime now = QDateTime::currentDateTime();
+        responseObj["code"] = 200;
+        responseObj["date"] = now.date().toString(Qt::ISODate);
+        responseObj["type"] = "login_response";
+        responseObj["time"] = now.time().toString(Qt::ISODate);
+        responseObj["rfid"] = rfid;
     } else {
-        qDebug() << "Failed to load or parse USER JSON.";
+        responseObj["code"] = 403;
+        responseObj["type"] = "login_response";
+        responseObj["message"] = "Authentication Failed";
+        this->_m_socketServer.kickout();
     }
+    QJsonDocument responseDoc(responseObj);
+    QString responseJsonString = QString::fromUtf8(responseDoc.toJson(QJsonDocument::Compact));
+    this->_m_socketServer.sendMessageToClient(responseJsonString);
+    return responseJsonString;
 }
+
+QString Server::formHistory(QJsonObject& qJO){
+    QJsonDocument responseDoc(qJO);
+    QString responseJsonString = QString::fromUtf8(responseDoc.toJson(QJsonDocument::Compact));
+    return responseJsonString;
+}
+
+

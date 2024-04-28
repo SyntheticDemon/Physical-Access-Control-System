@@ -15,14 +15,17 @@ public:
     void startConnection();
     void login(const QString &username, const QString &password);
 signals:
-    void connected();
+    void connectionChanged(bool &enabled);
+    void emitHistory(const QJsonObject& historyResponse);
 private:
+    void handleSocketResponse(const QJsonObject& historyResponse);
     QWebSocket webSocket;
     void sendMessage(const QString &message);
     QUrl m_url;
 private slots:
     void onConnected();
     void onError();
+    void onDisconnected();
     void onTextMessageReceived(const QString &message);
 };
 

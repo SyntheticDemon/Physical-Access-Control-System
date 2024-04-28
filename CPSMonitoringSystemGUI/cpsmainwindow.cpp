@@ -72,6 +72,13 @@ void MainWindow::setUsername(const QString &username)
 void MainWindow::changeRightPanelEnabled(bool enabled)
 {
     _rightPanel->setEnabled(enabled);
+    for (int i = 0; i < _rightPanel->count(); ++i) {
+        QWidget* widget = _rightPanel->itemAt(i)->widget();
+        if (widget) {
+            widget->setEnabled(enabled);
+        }
+    }
+
 }
 
 void MainWindow::showUserDetails(const QString &username, const QString &date, const QString &time)
@@ -85,7 +92,7 @@ void MainWindow::showUserDetails(const QString &username, const QString &date, c
 /*
  * =============================================
  * ================== PRIVATES =================
- * =============================================
+ * =====================================÷========
  */
 
 void MainWindow::setupConnections()
