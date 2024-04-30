@@ -23,7 +23,9 @@ private slots:
      QString authenticateUser(const QJsonObject &request);
 
 private:
+    void updateHistory(QJsonObject& history_log);
     QString formDetails(QJsonObject& qJO);
+    QJsonArray historyArray;
     QString formHistory(QJsonObject& qJO);
     QHttpServer _m_httpServer;
     SocketServer _m_socketServer;
@@ -34,6 +36,7 @@ private:
     QJsonObject loadJsonFromFile(const QString &fileName);
     QMap<QString, QString> m_userRFIDs;
     QMap<QString, QString> m_userPasswords;
+    QJsonArray readHistory(const QString &fileName);
     void loadDataFromJson(const QString &filePath);
 
 };

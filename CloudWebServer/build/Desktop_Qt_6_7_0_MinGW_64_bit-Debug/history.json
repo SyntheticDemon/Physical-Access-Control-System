@@ -1,0 +1,76 @@
+{
+    "history": [
+        {
+            "date": "2024-04-30",
+            "exists": true,
+            "message": "RFID found.",
+            "time": "15:31:00",
+            "type": "history",
+            "username": "1"
+        },
+        {
+            "date": "2024-04-30",
+            "exists": true,
+            "message": "RFID found.",
+            "time": "15:36:54",
+            "type": "history",
+            "username": "1"
+        },
+        {
+            "date": "2024-04-30",
+            "exists": true,
+            "message": "RFID found.",
+            "time": "15:36:55",
+            "type": "history",
+            "username": "1"
+        },
+        {
+            "date": "2024-04-30",
+            "exists": true,
+            "message": "RFID found.",
+            "time": "15:36:55",
+            "type": "history",
+            "username": "1"
+        },
+        {
+            "date": "2024-04-30",
+            "exists": true,
+            "message": "RFID found.",
+            "time": "15:36:56",
+            "type": "history",
+            "username": "1"
+        },
+        {
+            "date": "2024-04-30",
+            "exists": true,
+            "message": "RFID found.",
+            "time": "15:36:58",
+            "type": "history",
+            "username": "1"
+        },
+        {
+            "date": "2024-04-30",
+            "exists": true,
+            "message": "RFID found.",
+            "time": "16:15:09",
+            "type": "history",
+            "username": "1"
+        },
+        {
+            "date": "2024-04-30",
+            "exists": true,
+            "message": "RFID found.",
+            "time": "16:15:14",
+            "type": "history",
+            "username": "1"
+        },
+        {
+            "date": "2024-04-30",
+            "exists": true,
+            "message": "RFID found.",
+            "time": "16:17:44",
+            "type": "history",
+            "username": "1"
+        }
+    ]
+}

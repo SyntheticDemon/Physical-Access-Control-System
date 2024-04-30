@@ -80,8 +80,17 @@ Server::Server(QObject *parent)
 {
     loadDataFromJson("users.json");
     connect(&_m_socketServer, &SocketServer::sendAuthSignal, this, &Server::authenticateUser);
+    historyArray = this->readHistory("history.json");
     Server::setupHTTPServer();
 }
+
+QJsonArray Server::readHistory(const QString &fileName)
+{
+    QJsonObject json = loadJsonFromFile(fileName);
+    QJsonArray  historyArray= json["history"].toArray();
+    return historyArray;
+}
+
 
 QJsonObject Server::loadJsonFromFile(const QString &fileName)
 {
@@ -132,6 +141,13 @@ QString Server::authenticateUser(const QJsonObject &request) {
         responseObj["type"] = "login_response";
         responseObj["time"] = now.time().toString(Qt::ISODate);
         responseObj["rfid"] = rfid;
+
+        for (const auto& historyEntry : this->historyArray) {
+            qDebug() << historyEntry;
+            QJsonObject historyObj = historyEntry.toObject();
+            QString historyLog = this->formHistory(historyObj);
+            this->_m_socketServer.sendMessageToClient(historyLog);
+        }
     } else {
         responseObj["code"] = 403;
         responseObj["type"] = "login_response";
@@ -162,3 +178,20 @@ QString Server::formDetails(QJsonObject& qJO) {
     return responseJsonString;
 }
 
+
+void Server::updateHistory(QJsonObject& historyLog){
+    QFile file("history.json");
+    historyArray.append(historyLog);
+    QJsonObject historyObj;
+    historyObj["history"]=historyArray;
+    QJsonDocument jsonWriteDoc(historyObj);
+    if (file.open(QIODevice::ReadWrite)) {
+        file.write(jsonWriteDoc.toJson());
+        file.close();
+
+    } else {
+
+        qCritical() << "Failed to open JSON file for appending.";
+    }
+
+}
