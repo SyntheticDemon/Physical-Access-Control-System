@@ -5,11 +5,9 @@
 In this project , we designed a system to control entrances to a virtual Cooeration. The system contained three major parts :
 
 1) embeded part ( sensors and hardware modules ) : We give every body in the system an RFID Tag , using these tags and sensors we authenticate employers. RFID sensor read the information about employers .
-In the design of door , there is a LED light and monitor in front of the door , there we showed the result of authentication using the LED light. (grren light for the authenticated users and red light for unathenticated users.)
-
-We used ##Arduino board for controling modules and ##ESP8266 ##wifi for handling the network part of the project .
-2) cloud : Web server including a list that indicate who is eligable to enter is in this part. 
-3) supervisory system : This part is actually a software which can communicate with the web server via web socket .
+In the design of door , there is a LED light and monitor in front of the door , there we showed the result of authentication using the LED light. (grren light for the authenticated users and red light for unathenticated users.) .We used ##Arduino board for controling modules and ##ESP8266 ##wifi for handling the network part of the project .
+3) cloud : Web server including a list that indicate who is eligable to enter is in this part. 
+4) supervisory system : This part is actually a software which can communicate with the web server via web socket .
 
 
 ## Code Structure and Implementational Details
