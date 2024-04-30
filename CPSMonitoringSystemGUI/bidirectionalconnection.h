@@ -17,6 +17,7 @@ public:
 signals:
     void connectionChanged(bool &enabled);
     void emitHistory(const QJsonObject& historyResponse);
+    void emitDetails(const QString &username, const QString &date, const QString &time);
 private:
     void handleSocketResponse(const QJsonObject& historyResponse);
     QWebSocket webSocket;

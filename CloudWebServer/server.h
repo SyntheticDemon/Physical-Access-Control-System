@@ -23,6 +23,7 @@ private slots:
      QString authenticateUser(const QJsonObject &request);
 
 private:
+    QString formDetails(QJsonObject& qJO);
     QString formHistory(QJsonObject& qJO);
     QHttpServer _m_httpServer;
     SocketServer _m_socketServer;

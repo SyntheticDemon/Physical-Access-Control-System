@@ -1,4 +1,4 @@
-#include "cpsapplication.h"
+  #include "cpsapplication.h"
 #include "BidirectionalConnection.h"
 #include <qurl.h>
 #include <QJsonArray>
@@ -39,6 +39,7 @@ void Application::setupWebSocket(const QString &url, const QString &username, co
     QObject::connect(this->_connection, &BidirectionalConnection::connectionChanged,this->_window, &MainWindow::changeRightPanelEnabled);
     _connection->startConnection();
     QObject::connect(_connection, &BidirectionalConnection::emitHistory, this, &Application::receiveHistory);
+    QObject::connect(_connection, &BidirectionalConnection::emitDetails, _window, &MainWindow::showUserDetails);
 
 }
 

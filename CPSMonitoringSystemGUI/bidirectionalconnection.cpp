@@ -69,11 +69,12 @@ void BidirectionalConnection::onDisconnected()
 
 }
 
-void BidirectionalConnection::handleSocketResponse(const QJsonObject& historyResponse){
-    if (historyResponse["type"] == "history"){
-        emit emitHistory(historyResponse);
-    }
-    else{
+void BidirectionalConnection::handleSocketResponse(const QJsonObject& response){
+    if (response["type"] == "history"){
+        emit emitHistory(response);
+    } else if(response["type"] == "details") {
+        emit emitDetails(response["username"].toString(), response["date"].toString(), response["time"].toString());
+    } else {
         qDebug() << "Response did not require handling";
     }
 }

@@ -36,7 +36,6 @@ void Server::setupHTTPServer(){
 
             bool rfidExistence = m_userRFIDs.values().contains(rfid);
 
-
             jsonResponse["exists"] = m_userRFIDs.values().contains(rfid);
             jsonResponse["message"] = m_userRFIDs.values().contains(rfid) ? "RFID found." : "RFID not found.";
             jsonResponse["date"] = now.date().toString(Qt::ISODate);
@@ -51,6 +50,14 @@ void Server::setupHTTPServer(){
                 qDebug() << "Emitting History Log" << historyLog ;
                 this->_m_socketServer.sendMessageToClient(historyLog);
 
+                // details
+                QString detailsLog(this->formHistory(jsonResponse));
+                this->_m_socketServer.sendMessageToClient(detailsLog);
+
+            } else {
+                // details
+                QString detailsLog(this->formHistory(jsonResponse));
+                this->_m_socketServer.sendMessageToClient(detailsLog);
             }
 
             return QHttpServerResponse("application/json", respDoc.toJson());
@@ -143,4 +150,15 @@ QString Server::formHistory(QJsonObject& qJO){
     return responseJsonString;
 }
 
+QString Server::formDetails(QJsonObject& qJO) {
+    QJsonObject jsonResponse;
+    jsonResponse["username"] = qJO["username"].toString();
+    jsonResponse["date"] = qJO["date"].toString();
+    jsonResponse["time"] = qJO["time"].toString();
+    jsonResponse["type"] = "detail";
+
+    QJsonDocument responseDoc(jsonResponse);
+    QString responseJsonString = QString::fromUtf8(responseDoc.toJson(QJsonDocument::Compact));
+    return responseJsonString;
+}
 
