@@ -6,7 +6,6 @@ BidirectionalConnection::BidirectionalConnection(const QUrl& url, QObject *paren
     : QObject(parent), m_url(url)
 {
     QObject::connect(&webSocket, &QWebSocket::connected, this, &BidirectionalConnection::onConnected);
-    // QObject::connect(&webSocket, &QWebSocket::error, this, &BidirectionalConnection::onError);
     QObject::connect(&webSocket, &QWebSocket::disconnected, this, &BidirectionalConnection::onDisconnected);
     QObject::connect(&webSocket, &QWebSocket::textMessageReceived, this, &BidirectionalConnection::onTextMessageReceived);
 }
@@ -72,7 +71,7 @@ void BidirectionalConnection::onDisconnected()
 void BidirectionalConnection::handleSocketResponse(const QJsonObject& response){
     if (response["type"] == "history"){
         emit emitHistory(response);
-    } else if(response["type"] == "details") {
+    } else if(response["type"] == "detail") {
         emit emitDetails(response["username"].toString(), response["date"].toString(), response["time"].toString());
     } else {
         qDebug() << "Response did not require handling";

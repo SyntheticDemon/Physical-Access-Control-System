@@ -16,9 +16,6 @@ Application::Application(QObject *parent)
     QObject::connect(_window, &MainWindow::connectBtnClicked, this, &Application::setupWebSocket);
     QObject::connect(_window, &MainWindow::historyuBtnClicked, this, &Application::showHistoryWindow);
 
-    // TODO:
-    // QObject::connect(this->_connection, &BidirectionalConnection::connected, _window, &MainWindow::showUserDetails);
-
 }
 
 Application::~Application()

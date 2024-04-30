@@ -49,13 +49,10 @@ void Server::setupHTTPServer(){
                 QString historyLog(this->formHistory(jsonResponse));
                 qDebug() << "Emitting History Log" << historyLog ;
                 this->_m_socketServer.sendMessageToClient(historyLog);
-
-                // details
-                QString detailsLog(this->formHistory(jsonResponse));
+                QString detailsLog(this->formDetails(jsonResponse));
                 this->_m_socketServer.sendMessageToClient(detailsLog);
 
             } else {
-                // details
                 QString detailsLog(this->formHistory(jsonResponse));
                 this->_m_socketServer.sendMessageToClient(detailsLog);
             }
