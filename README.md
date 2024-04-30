@@ -35,5 +35,25 @@ whose implementation is showed below
 ![alt text](images/image-3.png)
 On successful RFID verifications,a history log is sent over to the active GUI connection, this ensures all live details are sent over the connection so the GUI has the latest updates in realtime, 
 Also when a new client is connected, history logs related to the past gate openings which are stored on a file in the disk, are sent serially over the network to the user 
+Code from history implementation which iterates over the internal historyArray list to send arrays
+![History Implementation](images/image-5.png)
+![alt text](images/image-6.png)
+![alt text](images/image-7.png)
+![alt text](images/image-8.png)
+#### User Details 
+The last passing user on the gate will appear on the gate, the user details is in the form of a history log and is emitted as shown in the code below 
+implemented using the ```formUserDetails()``` function
 
-<!-- TODO : add old history implementation here @Uldouz -->
+# Output
+The output of the client server is shown below
+## User Details
+![alt text](images/image-details.png)
+## History output
+![alt text](images/image-history.png)
+## Right Panel disabled
+![alt text](images/image-panel.png)
+## Postman results
+### Not Found 
+![alt text](images/image-found.png)
+### Found
+![alt text](images/image-notfound.png)
