@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(MonitoritngSystem VERSION 0.1 LANGUAGES CXX)
+project(CPSMonitoritngSystemGUI VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -23,7 +23,6 @@ set(PROJECT_SOURCES
         cpslabel.h cpslabel.cpp
         cpswindowsapitools.h
         cpsapplication.h cpsapplication.cpp
-        HTTP
         httprequest.h httprequest.cpp
         httpresponse.h httpresponse.cpp
         bidirectionalconnection.h bidirectionalconnection.cpp
