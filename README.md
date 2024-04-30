@@ -4,8 +4,14 @@
 
 ### GUI Client
 A GUI Client is used for the admin to get a view of the events published and entry accesses granted
-
-
+### Key functions 
+Certain functions are used to setup event routing between the server and the client which you can see below
+![alt text](images/application_functions.png)
+The below class is used for setting up a bidirectional connection between the server and the client , it emits signals which are used to handle the UI Changes in the widget application
+![alt text](images/bidirectional_connection.png) 
+Finally , connecting signals and slots, and using the already developed code gives us a fully functional application
+![alt text](images/1.png)
+![alt text](images/2.png)
 ### RFID Server
 This server consists of two main components
 1. The websocket server
