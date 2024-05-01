@@ -33,7 +33,7 @@ Here's a brief guide for installing Proteus and the Qt framework :
 
 ### Embedded Section:
 
-The high-level schema of the embedded file:
+The high-level schema of the embedded system:
 
 ![image](https://github.com/SyntheticDemon/Cyber-Physical-Systems/assets/88896798/e4471736-a58e-4cd4-ace5-24dde2598eb7)
 
