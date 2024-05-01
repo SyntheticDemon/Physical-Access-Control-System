@@ -2,14 +2,33 @@
 
 ## Description :
 
-In this project , we designed a system to control entrances to a virtual Cooeration. The system contained three major parts :
+In this project , we designed a system to control entrances to a virtual company. The system contained three major parts :
 
 1) embeded part ( sensors and hardware modules ) : We give every body in the system an RFID Tag , using these tags and sensors we authenticate employers. RFID sensor read the information about employers .
-In the design of door , there is a LED light and monitor in front of the door , there we showed the result of authentication using the LED light. (grren light for the authenticated users and red light for unathenticated users.) .We used Arduino board for controling modules and ESP8266 wifi for handling the network part of the project .
-3) cloud : Web server including a list that indicate who is eligable to enter is in this part. 
-4) supervisory system : This part is actually a software which can communicate with the web server via web socket .
+In the design of door , there is a LED light and monitor in front of the door , there we showed the result of authentication using the LED light. (grren light for the authenticated users and red light for unathenticated users) We used Arduino board for controling modules and ESP8266 wifi for handling the network part of the project .
+2) cloud : Web server including a list that indicate who is eligable to enter is in this part. 
+3) supervisory system : This part is actually a software which can communicate with the web server via web socket .
 
+## Installation :
+In our project, we use the Proteus project for simulating the embedded part. Proteus is a simulation software that allows us to model and simulate the behavior of electronic circuits.
 
+For the implementation of the web server and supervisory parts, we use the Qt framework. Qt is a cross-platform application framework that allows us to develop graphical user interfaces and other software components.
+
+Here's a brief guide for installing Proteus and the Qt framework :
+
+### Proteus Simulations
+1. Download and install Proteus from the [Labcenter Electronics website](https://www.labcenter.com/).
+2. Open Proteus and import the simulation files provided in the project.
+3. Set up the simulations as described in the project documentation.
+
+### Web Server and Supervisory Parts
+1. Install the Qt framework from the [Qt website](https://www.qt.io/download).
+2. Clone or download the project repository from GitHub.
+3. Open the Qt project file (`.pro`) in Qt Creator.
+4. Configure the project settings and build the project.
+5. Run the built executable to start the web server and supervisory parts.
+
+   
 ## Code Structure and Implementational Details
 
 ### GUI Client
