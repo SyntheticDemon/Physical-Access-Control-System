@@ -95,12 +95,27 @@ The last passing user on the gate will appear on the gate, the user details is i
 implemented using the ```formUserDetails()``` function
 
 # Output
+## Embedded System:
+### True RFID on the Embedded System
+The DC-Motor starts by rotating clockwisely to open the door, and the Green LED light turns on. After a predefined amount of time, the DC-Motor starts rotating counter clockwisely and the Green LED light turns off.   
+
+![Untitled](https://github.com/SyntheticDemon/Cyber-Physical-Systems/assets/88896798/ffa332bb-a760-4455-af0d-32c68ea244b7)     
+     
+  
+### False RFID on the Embedded System
+The Red LED turns on and the door is not opening.      
+
+       
+![Untitled](https://github.com/SyntheticDemon/Cyber-Physical-Systems/assets/88896798/c7ed2e9f-2cf0-438f-89bb-02ec6c8b375a)
+
+      
+## Cloud Server:
 The output of the client server is shown below
-## User Details
+### User Details
 ![alt text](images/image-details.png)
-## History output
+### History output
 ![alt text](images/image-history.png)
-## Right Panel disabled
+### Right Panel disabled
 ![alt text](images/image-panel.png)
 ## Postman results
 ### Not Found 
