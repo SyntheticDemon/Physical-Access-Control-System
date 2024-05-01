@@ -1,4 +1,4 @@
-# Cyber Physical Systems - (Realtime Embedded Systems) Report
+# Cyber Physical Systems - (Real-Time Embedded Systems) Report
 
 ## Description :
 
