@@ -31,9 +31,24 @@ Here's a brief guide for installing Proteus and the Qt framework :
    
 ## Code Structure and Implementational Details
 
-### GUI Client
+### Embedded Section:
+
+The high-level schema of the embedded file:
+
+![image](https://github.com/SyntheticDemon/Cyber-Physical-Systems/assets/88896798/e4471736-a58e-4cd4-ace5-24dde2598eb7)
+
+Our embedded system is consisted of following units:
+- **Arduino UNO board:** It is programmed to control all other units and signals.
+- **ENC28J60-Ethernet Module:** Used for sending ethernet requests and receiving response from the cloud server.
+- **DC-Motor:** Starts when the RFID tag is correct, in order to open the door.
+- **Green/Red LEDs:** Turns on when the RFID tag is correct (GREEN LED) and when the RFID tag is false (RED LED)
+- **Virtual Terminal:** Since Proteus does not support any RFID Reader, we use virtual terminal for giving the RFID tag to the system.  
+
+
+### Cloud Section:
+#### GUI Client
 A GUI Client is used for the admin to get a view of the events published and entry accesses granted
-### Key functions 
+#### Key functions 
 Certain functions are used to setup event routing between the server and the client which you can see below
 ![alt text](images/application_functions.png)
 The below class is used for setting up a bidirectional connection between the server and the client , it emits signals which are used to handle the UI Changes in the widget application
@@ -41,7 +56,7 @@ The below class is used for setting up a bidirectional connection between the se
 Finally , connecting signals and slots, and using the already developed code gives us a fully functional application
 ![alt text](images/1.png)
 ![alt text](images/2.png)
-### RFID Server
+#### RFID Server
 This server consists of two main components
 1. The websocket server
 2. The HTTP Server 
@@ -50,19 +65,19 @@ The business / logic layer is all maintained in the top parent class of Server[.
 ![alt text](images/server_header.png)
 
 which serves as a container for the web socket server (Used mainly to communicate with)
-#### Initialization
+##### Initialization
 Initialization requires a user.json adjacent to RFIDServer.exe when launching, users and their RFIDs-passwords are read from this file
 a ```loadJsonFromFile ``` method is used for instantiation of user data
 
-#### Logic 
-##### Authentication and Websocket functionalities 
+##### Logic 
+###### Authentication and Websocket functionalities 
 A handle websocket request method has been implemented which is extendible, this helps to add new functionalities on the fly without handling multiple unrelated usecases in the same function 
 ![alt text](images/image-1.png)
 Websocket server only supports one GUI client and discards the old connection upon a new request.
 For authentication of users, any incorrect username password combinations will be met with a disconnection and a failed authentication response, enforcing the GUI Client to connect again
 When websocket receives a new request, it emits a signal to the server class ( We avoided sharing logical resources by using signals here), server handles and uses the web socket attribute field to send the response over to the user 
 ![alt text](images/image-2.png)
-##### RFID checks 
+###### RFID checks 
 The server exposes a REST endpoint for checking RFIDs against the database for the arduino board access, 
 this endpoint URL : 
 ``` /checkRFID ```
@@ -75,7 +90,7 @@ Code from history implementation which iterates over the internal historyArray l
 ![alt text](images/image-6.png)
 ![alt text](images/image-7.png)
 ![alt text](images/image-8.png)
-#### User Details 
+##### User Details 
 The last passing user on the gate will appear on the gate, the user details is in the form of a history log and is emitted as shown in the code below 
 implemented using the ```formUserDetails()``` function
 
